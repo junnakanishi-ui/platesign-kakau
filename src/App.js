@@ -97,7 +97,10 @@ export default function App() {
     if (finishes.corner) net += 1000;
     if (finishes.wrap) net += 2000;
 
-    net = net * qty;
+    // 枚数が空欄等の場合は0として計算
+    const quantity = qty === "" ? 0 : qty;
+    net = net * quantity;
+
     const tax = Math.round(net * 0.1);
     setPrice({ net, tax, total: net + tax });
 
@@ -185,7 +188,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-32 lg:pb-0">
+    // 【修正】 h-auto を追加し、pb-40で下の余白を十分に確保（スクロール詰まり防止）
+    <div className="min-h-screen h-auto bg-slate-50 text-slate-900 font-sans pb-40 lg:pb-0">
       <header className="bg-white border-b sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="font-bold text-xl text-blue-900 flex items-center gap-2">
@@ -252,11 +256,15 @@ export default function App() {
             </div>
             <div className="flex items-center gap-4">
               <label className="text-sm text-slate-500">枚数</label>
+              {/* 【修正】 03問題対策：入力値を安全に処理するロジックに変更 */}
               <input
                 type="number"
                 min="1"
                 value={qty}
-                onChange={(e) => setQty(Number(e.target.value))}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setQty(val === "" ? "" : Number(val));
+                }}
                 className="w-24 p-2 border rounded text-center font-bold"
               />
             </div>
@@ -429,7 +437,7 @@ export default function App() {
           </section>
         </div>
 
-        {/* 右カラム：Sticky 見積もり結果 (修正版) */}
+        {/* 右カラム：Sticky 見積もり結果 (PC用) */}
         <div className="hidden lg:block w-80 shrink-0 sticky top-24 self-start">
           <div className="bg-white p-6 rounded-xl shadow-lg border border-blue-100">
             <h4 className="font-bold text-slate-500 mb-4 text-sm">
@@ -493,7 +501,7 @@ export default function App() {
               {formatPrice(price.net)} (税別)
             </div>
 
-            {/* 納期目安エリア（動的表示） */}
+            {/* 納期目安エリア */}
             <div className="bg-slate-50 p-3 rounded mb-4 text-xs text-slate-600 leading-relaxed border border-slate-200">
               <p className="font-bold mb-1 text-slate-800">【納期目安】</p>
               <p className="whitespace-pre-wrap">{deliveryInfo}</p>
@@ -512,17 +520,17 @@ export default function App() {
         </div>
       </main>
 
-      {/* スマホ用固定フッター */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50 flex items-center justify-between">
+      {/* 【修正】 スマホ用 固定フッターバー（価格常時表示・注文ボタン） */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-5px_15px_rgba(0,0,0,0.1)] md:hidden z-50 flex justify-between items-center safe-area-pb">
         <div>
-          <div className="text-xs text-slate-500">概算見積もり(税込)</div>
-          <div className="text-2xl font-bold text-blue-900">
+          <p className="text-xs text-gray-500">概算見積もり(税込)</p>
+          <p className="text-2xl font-bold text-blue-900">
             {formatPrice(price.total)}
-          </div>
+          </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-orange-500 text-white font-bold px-6 py-3 rounded-lg shadow"
+          className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all"
         >
           注文へ進む
         </button>
