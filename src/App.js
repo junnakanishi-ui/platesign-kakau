@@ -193,11 +193,11 @@ export default function App() {
             プレート看板専門店
           </div>
           <a
-            href="tel:0120-XXX-XXX"
+            href="tel:052-265-7603"
             className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full font-bold transition"
           >
             <Phone size={18} />{" "}
-            <span className="hidden sm:inline">0120-XXX-XXX</span>
+            <span className="hidden sm:inline">052-265-7603</span>
           </a>
         </div>
       </header>
