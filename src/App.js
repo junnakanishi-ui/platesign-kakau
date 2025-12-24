@@ -190,7 +190,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="font-bold text-xl text-blue-900 flex items-center gap-2">
             <div className="bg-blue-600 text-white p-1 rounded">看</div>
-            プレート看板専門店
+            プレート看板・価格シミュレーション
           </div>
           <a
             href="tel:052-265-7603"
